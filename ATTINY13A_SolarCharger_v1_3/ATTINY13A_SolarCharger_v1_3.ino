@@ -165,11 +165,11 @@ int ledTrigger(int modeCounter) {
 
 void setPrescaler() {
   // Datasheet page 28
-  
+
   // enable prescaler change
   // this must write a 1 to CLKPCE
   CLKPR = (1 << CLKPCE);
-  
+
   // change prescaler
   // this must write a 0 to CLKPCE
   CLKPR = (1 << CLKPS2);
@@ -199,17 +199,18 @@ int main(void) {
 
     int batt = pb2_read();
 
+
+    HIGHBATT = false;
+    LOWBATT = false;
+    SHUTOFF = false;
+    
     if (batt > 1012)
       HIGHBATT = true;
     else if ((batt < 711) & (batt > 600))
       LOWBATT = true;
     else if (batt < 600)
       SHUTOFF = true;
-    else {
-      HIGHBATT = false;
-      LOWBATT = false;
-      SHUTOFF = false;
-    }
+    
 
     // Do not allow charging if battery voltage is too high (>4.2V)
     if (HIGHBATT)
