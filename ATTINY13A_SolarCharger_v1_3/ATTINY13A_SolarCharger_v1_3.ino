@@ -232,9 +232,12 @@ int main(void) {
     if (!b4_input) {
       modeCounter++;
       modeCounter = ledTrigger(modeCounter);
+
+      int buttonDownTime = 0;
       //wait for user to release switch
-      while (!b4_input) {
+      while (!b4_input && buttonDownTime < 1000) {
         delay(1);
+        buttonDownTime++;
         b4_input = pb4_read();
       }
     }
