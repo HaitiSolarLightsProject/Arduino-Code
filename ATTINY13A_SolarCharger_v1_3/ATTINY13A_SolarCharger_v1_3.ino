@@ -4,7 +4,7 @@
    and respond to one user switch input that controls LED modes.
 
    ATTINY13A datasheet found here:
-   http://www.atmel.com/images/doc8126.pdf
+   http://ww1.microchip.com/downloads/en/DeviceDoc/doc8126.pdf
 */
 
 /*
@@ -45,7 +45,7 @@ void PWM(int dutyCycle, int pin) {
     TCCR0A |= (1 << WGM01) | (1 << WGM00);
 
     //Set Timer/Counter clock source to no prescalar
-    TCCR0B |= (1 << CS01) | (1 << CS00);
+    TCCR0B |=  (1 << CS00);
 
     //Set output compare register to duty cycle value from 0 to 255
     OCR0A = dutyCycle;
