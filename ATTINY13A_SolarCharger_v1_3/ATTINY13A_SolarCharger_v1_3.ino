@@ -38,41 +38,29 @@ boolean HIGHBATT = false;
  *********************************************************/
 
 void PWM(int dutyCycle, int pin) {
-  if (pin == PB0) {         //PB0 PWM mode
+  if (pin == PB0 || pin == PB1) {
+    // init PWM mode
+    
+    //PB0 PWM mode
     //Set PB0 as "clear OC0A on compare match, set at TOP" (pg. 70)
     //Set PBO to fast-PWM mode
+    TCCR0A |= (1 << WGM01) | (1 << WGM00);
+    
+    TCCR0B |= (1 << CS00);  //Set Timer/Counter clock source to no prescalar
+    //TCCR0B |= (1 << CS01) | (1 << CS00);
+
+  }
+  if (pin == PB0) {
+    //Set output compare register to duty cycle value from 0 to 255
     TCCR0A |= (1 << COM0A1);
-    TCCR0A |= (1 << WGM01) | (1 << WGM00);
-
-    //Set Timer/Counter clock source to no prescalar
-    TCCR0B |=  (1 << CS00);
-
-    //Set output compare register to duty cycle value from 0 to 255
     OCR0A = dutyCycle;
   }
-  else if (pin == PB1) {    //PB1 PWM mode
-    //Set PB1 as "clear OC0B on compare match, set at TOP" (pg. 72)
-    //Set PB1 to fast-PWM mode
+  else if (pin == PB1) {
+
     TCCR0A |= (1 << COM0B1);
-    TCCR0A |= (1 << WGM01) | (1 << WGM00);
-
-    //Set Timer/Counter clock source to no prescalar
-    TCCR0B |= (1 << CS01) | (1 << CS00);
-
     //Set output compare register to duty cycle value from 0 to 255
-    OCR0A = dutyCycle;
+    OCR0B = dutyCycle;
   }
-  //  else if(mode == 4) {  //Blink mode
-  //    //Set PB0 as "toggle OC0A on compare match" (pg. 70)
-  //    //Set to CTC (clear timer on compare match) mode
-  //    TCCR0A|= (1<<COM0A0);
-  //    TCCR0A|= (1<<WGM01);
-  //
-  //    //Set Timer/Counter clock source to 1024 prescalar
-  //    TCCR0B|= (1<<CS02)|(1<<CS00);
-  //
-  //    OCR0A = 255;
-  //  }
   else {
     //Turn off PB0 and PB1 timer/counter
     TCCR0A &= ~(1 << COM0A1) & ~(1 << COM0B1);
@@ -172,7 +160,7 @@ void setPrescaler() {
 
   // change prescaler
   // this must write a 0 to CLKPCE
-  CLKPR = (1 << CLKPS2);
+  CLKPR = (1 << CLKPS3);
   // this sets the clock to 9.6/16 = 0.6MHz
 
 }
@@ -194,6 +182,11 @@ int main(void) {
   setupPin(PB3, 1);
   setupPin(PB4, 0);
   setupPin(PB5, 1);
+
+
+  // enable pullup on switch
+  pinMode(4, INPUT);
+  digitalWrite(4, HIGH);
 
   while (1) {
 
