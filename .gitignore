@@ -1,0 +1,11 @@
+
+.DS_Store
+.AppleDouble
+
+
+CPort/*.hex
+CPort/*.elf
+CPort/*.bin
+CPort/*.o
+
+PCB/*bak
